@@ -27,8 +27,11 @@ prs2net -p 'serialDec<>' test_serialDec.act
 To test the code in the "decrementer" folder, the corresponding instructions are:
 
 aflat test_serialDec.act > test_serialDec.prs 
+
 prsim test_serial...prs
-    source src_serialMerge.src
+
+source src_serialMerge.src
+
 prs2net -p 'serialDec<>' test_serialDec.act
 
 
