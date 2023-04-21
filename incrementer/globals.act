@@ -1,0 +1,4 @@
+deftype globals <: int<4> (bool Vdd, GND, pReset, sReset, _pReset, _sReset)
+{
+
+}

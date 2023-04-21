@@ -1,0 +1,141 @@
+import "globals.act";
+
+defproc inv(bool in, out; globals g) {
+    prs <g.Vdd, g.GND> {
+        in -> out-
+        ~in -> out+
+    }
+}
+
+defproc nor(bool in[2], out; globals g) {
+    prs <g.Vdd, g.GND> {
+        in[0] | in[1] -> out-
+        ~in[0] & ~in[1] -> out+
+    }
+}
+
+defproc norx(bool in0, in1, out; globals g) {
+    prs <g.Vdd, g.GND> {
+        in0 | in1 -> out-
+        ~in0 & ~in1 -> out+
+    }
+}
+
+defproc nor3(bool in[3], out; globals g) {
+    prs <g.Vdd, g.GND> {
+        in[0] | in[1] | in[2] -> out-
+        ~in[0] & ~in[1] & ~in[2] -> out+
+    }
+}
+
+defproc norx3(bool in0, in1, in2, out; globals g) {
+    prs <g.Vdd, g.GND> {
+        in0 | in1 | in2 -> out-
+        ~in0 & ~in1 & ~in2 -> out+
+    }
+}
+
+defproc nor4(bool in[4], out; globals g) {
+    prs <g.Vdd, g.GND> {
+        in[0] | in[1] | in[2] | in[3] -> out-
+        ~in[0] & ~in[1] & ~in[2] & ~in[3] -> out+
+    }
+}
+
+defproc nor5(bool in[5], out; globals g) {
+    prs <g.Vdd, g.GND> {
+        in[0] | in[1] | in[2] | in[3] | in[4] -> out-
+        ~in[0] & ~in[1] & ~in[2] & ~in[3] & ~in[4] -> out+
+    }
+}
+
+defproc nor6(bool in[6], out; globals g) {
+    prs <g.Vdd, g.GND> {
+        in[0] | in[1] | in[2] | in[3] | in[4] | in[5] -> out-
+        ~in[0] & ~in[1] & ~in[2] & ~in[3] & ~in[4] & ~in[5] -> out+
+    }
+}
+
+defproc nand(bool in[2], out; globals g) {
+    prs <g.Vdd, g.GND> {
+        in[0] & in[1] -> out-
+        ~in[0] | ~in[1] -> out+
+    }
+}
+
+defproc nandx(bool in0, in1, out; globals g) {
+    prs <g.Vdd, g.GND> {
+        in0 & in1 -> out-
+        ~in0 | ~in1 -> out+
+    }
+}
+
+defproc or(bool in[2], out; globals g) {
+    bool _out;
+    nor nor(in, _out, g);
+    inv inv(_out, out, g);
+}
+
+defproc orx(bool in0, in1, out; globals g) {
+    bool _out;
+    norx nor(in0, in1, _out, g);
+    inv inv(_out, out, g);
+}
+
+defproc orx3(bool in0, in1, in2, out; globals g) {
+    bool _out;
+    norx3 nor(in0, in1, in2, _out, g);
+    inv inv(_out, out, g);
+}
+
+defproc or3(bool in[3], out; globals g) {
+    bool _out;
+    nor3 nor3(in, _out, g);
+    inv inv(_out, out, g);
+}
+
+defproc or4(bool in[4], out; globals g) {
+    bool _outA, _outB;
+    nor norA(in[0..1], _outA, g);
+    nor norB(in[2..3], _outB, g);
+    nandx nand(_outA, _outB, out, g);
+}
+
+defproc and(bool in[2], out; globals g) {
+    bool _out;
+    nand nand(in, _out, g);
+    inv inv(_out, out, g);
+}
+
+defproc andx(bool in0, in1, out; globals g) {
+    bool _out;
+    nandx nand(in0, in1, _out, g);
+    inv inv(_out, out, g);
+}
+
+defproc cElemInv2Up2Down(bool x, y, _v; globals g)
+{
+    prs <g.Vdd, g.GND> {
+        x & y -> _v-
+        ~x & ~y -> _v+
+    }
+}
+
+defproc cElem2Up2Down(bool x, y, v; globals g) {
+    bool _v;
+    cElemInv2Up2Down c(x, y, _v, g);
+    inv inv(_v, v, g);
+}
+
+export defproc cElemInv2Up1Down(bool common, extraUp, _out; globals g) {
+    prs <g.Vdd, g.GND> {
+        common -> _out-
+        ~common & ~extraUp -> _out+
+    }
+}
+
+export defproc cElem2Up1Down(bool common, extraUp, out; globals g) {
+    bool _out;
+    cElemInv2Up1Down celem(common, extraUp, _out, g);
+    inv inv(_out, out, g);
+}

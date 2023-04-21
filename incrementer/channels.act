@@ -1,0 +1,100 @@
+defchan e1of1 <: chan(bool) (bool d, e)
+{
+}
+
+defchan e1of2 <: chan(bool) (bool d[2],d0,d1,e)
+{
+    d0 = d[0];
+    d1 = d[1];
+    spec {
+        exclhi(d0,d1)
+    }
+}
+
+defchan e1of3 <: chan(bool) (bool d[3],d0,d1,d2,e)
+{
+    d0 = d[0];
+    d1 = d[1];
+    d2 = d[2];
+    spec {
+        exclhi(d0,d1,d2)
+    }
+}
+
+defchan e1of4 <: chan(bool) (bool d[4],d0,d1,d2,d3,e)
+{
+    d0 = d[0];
+    d1 = d[1];
+    d2 = d[2];
+    d3 = d[3];
+    spec {
+        exclhi(d0,d1,d2,d3)
+    }
+}
+
+defchan e1of5 <: chan(bool) (bool d[5],d0,d1,d2,d3,d4,e)
+{
+    d0 = d[0];
+    d1 = d[1];
+    d2 = d[2];
+    d3 = d[3];
+    d4 = d[4];
+    spec {
+        exclhi(d0,d1,d2,d3,d4)
+    }
+}
+
+defchan e1of6 <: chan(bool) (bool d[6],d0,d1,d2,d3,d4,d5,e)
+{
+    d0 = d[0];
+    d1 = d[1];
+    d2 = d[2];
+    d3 = d[3];
+    d4 = d[4];
+    d5 = d[5];
+    spec {
+        exclhi(d0,d1,d2,d3,d4,d5)
+    }
+}
+
+defchan c1of2 <: chan(bool) (bool d[2],d0,d1)
+{
+    d0 = d[0];
+    d1 = d[1];
+}
+
+defchan c1of3 <: chan(bool) (bool d[3],d0,d1,d2)
+{
+    d0 = d[0];
+    d1 = d[1];
+    d2 = d[2];
+}
+
+defchan c1of5 <: chan(bool) (bool d[5],d0,d1,d2,d3,d4)
+{
+    d0 = d[0];
+    d1 = d[1];
+    d2 = d[2];
+    d3 = d[3];
+    d4 = d[4];
+}
+
+defchan c1of6 <: chan(bool) (bool d[6],d0,d1,d2,d3,d4,d5)
+{
+    d0 = d[0];
+    d1 = d[1];
+    d2 = d[2];
+    d3 = d[3];
+    d4 = d[4];
+    d5 = d[5];
+}
+
+defchan a1of3 <: chan(bool) (bool d[3],d0,d1,d2,a)
+{
+    d0 = d[0];
+    d1 = d[1];
+    d2 = d[2];
+    spec {
+        exclhi(d0,d1,d2)
+    }
+}

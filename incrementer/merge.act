@@ -1,0 +1,129 @@
+import "arbiter.act";
+import "basicGates.act";
+import "channels.act";
+
+export defproc merge(e1of4 L; e1of2 D; e1of4 R; globals g)
+{
+    // Renaming of external variables
+    bool le, ld[4], l0, l1, l2, l3;
+    L.e = le;
+    L.d = ld;
+    L.d[0] = l0;
+    L.d[1] = l1;
+    L.d[2] = l2;
+    L.d[3] = l3;
+
+    bool de, dd[2], d0, d1;
+    D.e = de;
+    D.d = dd;
+    D.d[0] = d0;
+    D.d[1] = d1;
+
+    bool re, rd[4], r0, r1, r2, r3;
+    R.e = re;
+    R.d = rd;
+    R.d[0] = r0;
+    R.d[1] = r1;
+    R.d[2] = r2;
+    R.d[3] = r3;
+
+    bool gsr, _gsr, gpr, _gpr;
+    gsr = g.sReset;
+   _gsr = g._sReset;
+    gpr = g.pReset;
+   _gpr = g._pReset;
+
+    // Validation of D and L
+    bool dv, lv, _lv; // v = validated
+    or orVd(dd, dv, g);
+    or4 orLv(ld, lv, g);
+    inv invLv(lv, _lv, g);
+
+    bool ls, _ls, lsi; // ls = L Serial; lsi: I = Internal, i.e. a pre-signal to do with the keeper
+
+    // Arbitration between L and D
+    bool dva; // D Valid Arbitrated
+    bool lsa, _lsa; // L Serial Arbitrated
+    bool ly; // lv and lsa
+    longArbiter arb(ls, dv, lsa, dva, g);
+    inv invLsa(lsa, _lsa, g);
+    norx norLy(_lv, _lsa, ly, g);
+
+    bool  enl,  enf,  end; // en = enable; L = L; F = Final; D = D
+    bool _enl, _enf, _end;
+    bool enli, _enli; // i = internal
+    bool endi, _endi;
+    bool enfi, _enfi;
+    bool enfii, _enfii; // ii is a second internal variable
+    bool _r0, _r1, _r2, _r3;
+
+    // Validation on R
+    bool rv, _rv, _rvii, rvi;
+    nor4 norRv(rd, _rv, g);
+
+    prs <g.Vdd, g.GND> {
+    // Introducing an extra guard in rv to check that all _en... have lowered
+        //                           Keeper
+        ~_rv & ~_enl & ~_enf & ~_end | ~_rvii & ~_rv                      -> rvi+
+        _rv                          | _rvii & (_rv | _enl | _enf | _end) -> rvi-
+        rvi => _rvii-
+        _rvii => rv-
+
+        // main handshake
+        //                                       Keeper
+        (~enl | ~enf | ~end) & ~re | ~_gpr    | ~r0 & (~re | ~enl | ~enf | ~end | ~ly | ~l0 | ~_gpr) -> _r0+
+        re & enl & enf & end & ly & l0 & _gsr |  r0 & _gpr & (re | enl & enf & end)                  -> _r0-
+        _r0 => r0-
+
+        (~enl | ~enf | ~end) & ~re | ~_gpr    | ~r1 & (~re | ~enl | ~enf | ~end | ~ly | ~l1 | ~_gpr) -> _r1+
+        re & enl & enf & end & ly & l1 & _gsr |  r1 & _gpr & (re | enl & enf & end)                  -> _r1-
+        _r1 => r1-
+        //                                                      Keeper
+        (~enl | ~enf | ~end) & ~re | ~_gpr                      | ~r2 & (~re | ~enl | ~enf | ~end | ((~ly | ~l2) & (~dva |  ~d0)) | ~_gpr) -> _r2+
+        re & enl & enf & end & ((ly & l2) | (dva &  d0)) & _gsr |  r2 & _gpr & (re | enl & enf & end)                                      -> _r2-
+        _r2 => r2-
+
+        (~enl | ~enf | ~end) & ~re | ~_gpr                      | ~r3 & (~re | ~enl | ~enf | ~end | ((~ly | ~l3) & (~dva |  ~d1)) | ~_gpr) -> _r3+
+        re & enl & enf & end & ((ly & l3) | (dva &  d1)) & _gsr |  r3 & _gpr & (re | enl & enf & end)                                      -> _r3-
+        _r3 => r3-
+
+        //                               Keeper
+        ~ly & ~rv | ~_gpr                | ~_enli & (~ly | (~l0 & ~l1) | ~rv | ~end | ~_gsr) -> enli+
+        ly & (l0 | l1) & rv & end & _gsr |  _enli & _gpr & (ly | rv)                         -> enli-
+        enli => _enli-
+        _enli => enl-
+        enl => _enl-
+
+        //                                   Keeper
+        ~ly & ~ls & ~lsa & ~lv & ~rv | ~_gpr | ~_enfi & (~ly | (~l2 & ~l3) | ~rv | ~end | ~_gsr) -> enfi+
+        ly & (l2 | l3) & rv & end & _gsr     |  _enfi & _gpr & (ly | ls | lsa | lv | rv)         -> enfi-
+        enfi => _enfi-
+        _enfi => enf-
+        //         Keeper
+        ~enf       | ~enfii & (~_lsa | ~enf) -> _enfii+
+        _lsa & enf |  enfii & enf            -> _enfii- //additional finishing conditions
+        _enfii => enfii-
+        enfii => _enf-
+
+        //                    Keeper
+        ~dva & ~rv | ~_gpr    | ~_endi & (~dva | ~enf | ~rv | ~_gsr) -> endi+
+        dva & enf & rv & _gsr | _endi & _gpr & (dva | rv)            -> endi-
+        endi => _endi-
+        _endi => end-
+        end => _end-
+
+        ~_enl & ~_enf | ~_gpr -> le+
+        (_enl | _enf) & _gsr  -> le-
+
+        ~_end | ~_gpr -> de+
+        _end  & _gsr  -> de-
+
+        // ls is set when multitoken communication starts on L
+        //                Keeper
+        ~_lv       & ~gsr | ~_ls & ~gpr & (~_enf | ~_lv) -> lsi+
+        _enf & _lv |  gpr |  _ls & (_lv | gsr)           -> lsi-
+        lsi => _ls-
+        _ls => ls-
+
+    }
+}

@@ -1,0 +1,17 @@
+import "incMerge.act";
+
+e1of2 D;
+e1of4 L, R;
+globals g;
+
+incMerge s(L, D, R, g);
+
+bool Reset, resetTrigger;
+
+nor4 vR(R.d, R.e);
+
+prs <g.Vdd, g.GND> {
+    g.pReset => g._pReset-
+    g.sReset => g._sReset-
+    Reset => resetTrigger-
+}

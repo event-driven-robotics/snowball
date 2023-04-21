@@ -1,0 +1,27 @@
+import "basicGates.act";
+
+export defproc arbiter(bool a, b, u, v; globals g)
+{
+    bool _u, _v;
+    prs <g.Vdd, g.GND> {
+    [keeper=0]  a &  _v -> _u-
+    [keeper=0] ~a  | ~_v  -> _u+
+    [keeper=0]  b &  _u -> _v-
+    [keeper=0] ~b  | ~_u  -> _v+
+    [keeper=0] _u => u-
+    [keeper=0] _v => v-
+   }
+   spec {
+     mk_excllo(_u, _v)
+   }
+}
+
+export defproc longArbiter(bool a1, a2, d1, d2; globals g)
+{
+    bool b1, b2, c1, c2;
+    arbiter arb(a1, a2, b1, b2, g);
+    inv inv1(b1, c1);
+    inv inv2(b2, c2);
+    cElemInv2Up1Down celem1(c1, b2, d1, g);
+    cElemInv2Up1Down celem2(c2, b1, d2, g);
+}

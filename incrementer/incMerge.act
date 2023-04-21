@@ -1,0 +1,12 @@
+import "arbiter.act";
+import "basicGates.act";
+import "channels.act";
+import "inc.act";
+import "merge.act";
+
+export defproc incMerge(e1of4 L; e1of2 D; e1of4 R; globals g)
+{
+    e1of4 Int;
+    inc i(L, Int, g);
+    merge m(Int, D, R, g);
+}

@@ -1,0 +1,155 @@
+import "basicGates.act";
+import "channels.act";
+
+export defproc serialDec(e1of4 L; e1of4 R; e1of2 T; globals g)
+{
+    // Renaming of external variables
+    bool le, l0, l1, l2, l3;
+    L.e = le;
+    L.d[0] = l0;
+    L.d[1] = l1;
+    L.d[2] = l2;
+    L.d[3] = l3;
+
+    bool re, r0, r1, r2, r3;
+    R.e = re;
+    R.d[0] = r0;
+    R.d[1] = r1;
+    R.d[2] = r2;
+    R.d[3] = r3;
+
+    bool te, t0, t1;
+    T.e = te;
+    T.d[0] = t0;
+    T.d[1] = t1;
+
+    bool b0, b1; // borrow
+    bool s1, s2, s3, s4; // status
+    bool c0, c1; // carry i.e. l_prev
+
+    bool _r1, _r2, _r3;
+    bool _i1, _i2, _i3, _i4, _i5, _i6, _i7, _i8, _i9, _i10, _i11, _i12, _i13, _i14;
+    bool  i1,  i2,  i3,  i4,  i5,  i6,  i7,  i8,  i9,  i10,  i11,  i12,  i13,  i14;
+
+    bool gsr, _gsr, gpr, _gpr;
+     gsr = g.sReset;
+    _gsr = g._sReset;
+     gpr = g.pReset;
+    _gpr = g._pReset;
+
+    orx3 orR0(i2, i6, i9, r0);
+    orx5 orR1(i3, i4, i7, i8, i10, r1);
+    i11 = r2;
+    i12 = r3;
+
+    bool ie;
+    norx norIe(i1, i5, ie); // these states don't handshake with r
+
+    i13 = t0;
+    i14 = t1;
+
+	prs <g.Vdd, g.GND>
+	{
+         //                           Keeper
+        _gsr & re & te & ie & l0 & s1 | i1 & _gpr & (ie | l0 | c1 | s1)     -> _i1-
+        ~ie & ~l0 & ~c1 & ~s1         | ~i1 & (~_gsr | ~re | ~te | ~ie | ~l0 | ~s1) | ~_gpr -> _i1+
+        _i1 => i1-
+
+        //                                                                   Keeper
+        _gsr & re & te & ie & l0 & (c0 & s3 & b0 | c1 & (s2 & b0 | s3 & b1)) | i2 & _gpr & (re | l0 | c1 | s2 | b1) -> _i2-
+        ~re & ~l0 & ~c1 & ~s2 & ~b1                                          | ~i2 & (~_gsr | ~re | ~te | ~ie | ~l0 | ((~c0 | ~s3 | ~b0) & (~c1 | ((~s2 | ~b0) & (~s3 | ~b1))))) | ~_gpr -> _i2+
+        _i2 => i2-
+
+        //                                      Keeper
+        _gsr & re & te & ie & l0 & c1 & s3 & b0 | i3 & _gpr & (re | l0 | c1) -> _i3-
+        ~re & ~l0 & ~c1                         | ~i3 & (~_gsr | ~re | ~te | ~ie | ~l0 | ~c1 | ~s3 | ~b0) | ~_gpr -> _i3+
+        _i3 => i3-
+
+        //                                                      Keeper
+        _gsr & re & te & ie & l0 & c0 & ((s2 & b0) | (s3 & b1)) | i4 & _gpr & (re | l0 | s2 | b0) -> _i4-
+        ~re & ~l0 & ~s2 & ~b0                      | ~i4 & (~_gsr | ~re | ~te | ~ie | ~l0 | ~c0 | ((~s2 | ~b0) & (~s3 | ~b1))) | ~_gpr -> _i4+
+        _i4 => i4-
+
+        //                            Keeper
+        _gsr & re & te & ie & l1 & s1 | i5 & _gpr & (ie | l1 | c0 | s1) -> _i5-
+        ~ie & ~l1 & ~c0 & ~s1         | ~i5 & (~_gsr | ~re | ~te | ~ie | ~l1 | ~s1) | ~_gpr -> _i5+
+        _i5 => i5-
+
+        //                                                                         Keeper
+        _gsr & re & te & ie & l1 & ((c0 & s3 & b0) | c1 & ((s2 & b0) | (s3 & b1))) | i6 & _gpr & (re | l1 | c0 | s2 | b1) -> _i6-
+        ~re & ~l1 & ~c0 & ~s2 & ~b1                                                | ~i6 & (~_gsr | ~re | ~te | ~ie | ~l1 | ((~c0 | ~s3 | ~b0) & (~c1 | ((~s2 | ~b0)) & (~s3 | ~b1)))) | ~_gpr -> _i6+
+        _i6 => i6-
+
+        //                                      Keeper
+        _gsr & re & te & ie & l1 & c1 & s3 & b0 | i7 & _gpr & (re | l1) -> _i7-
+        ~re & ~l1                               | ~i7 & (~_gsr | ~re | ~te | ~ie | ~l1 | ~c1 | ~s3 | ~b0) | ~_gpr -> _i7+
+        _i7 => i7-
+
+        //                                                      Keeper
+        _gsr & re & te & ie & l1 & c0 & ((s2 & b0) | (s3 & b1)) | i8 & _gpr & (re | l1 | c0 | s2 | b0) -> _i8-
+        ~re & ~l1 & ~c0 & ~s2 & ~b0                             | ~i8 & (~_gsr | ~re | ~te | ~ie | ~l1 | ~c0 | ((~s2 | ~b0) & (~s3 | ~b1))) | ~_gpr -> _i8+
+        _i8 => i8-
+
+        //                                                                                Keeper
+        _gsr & re & te & ie & (l2 | l3) & ((c0 & s3 & b0) | c1 & ((s2 & b0) | (s3 & b1))) | i9 & _gpr & (re | s2 | s3 | b1) -> _i9-
+        ~re & ~s2 & ~s3 & ~b1                                                             | ~i9 & (~_gsr | ~re | ~te | ~ie | (~l2 & ~l3) | ((~c0 | ~s3 | ~b0) & (~c1 | ((~s2 | ~b0) & (~s3 | ~b1))))) | ~_gpr -> _i9+
+        _i9 => i9-
+
+        //                                             Keeper
+        _gsr & re & te & ie & (l2 | l3) & c1 & s3 & b0 | i10 & _gpr & (re | s3) -> _i10-
+        ~re & ~s3                                      | ~i10 & (~_gsr | ~re | ~te | ~ie | (~l2 & ~l3) | ~c1 | ~s3 | ~b0) | ~_gpr -> _i10+
+        _i10 => i10-
+
+        //                                                               Keeper
+        _gsr & re & te & ie & l2 & (s4 | (c0 & ((s3 & b1) | (s2 & b0)))) | i11 & _gpr & (re | l2 | s2 | s3 | s4 | b1) -> _i11-
+        ~re & ~l2 & ~s2 & ~s3 & ~s4 & ~b1                                | ~i11 & (~_gsr | ~re | ~te | ~ie | ~l2 | (~s4 & (~c0 | ((~s3 | ~b1) & (~s2 | ~b0))))) | ~_gpr -> _i11+
+        _i11 => i11-
+
+        //                                                               Keeper
+        _gsr & re & te & ie & l3 & (s4 | (c0 & ((s3 & b1) | (s2 & b0)))) | i12 & _gpr & (re | l3 | s2 | s3 | s4 | b1) -> _i12-
+        ~re & ~l3 & ~s2 & ~s3 & ~s4 & ~b1                                | ~i12 & (~_gsr | ~re | ~te | ~ie | ~l3 | (~s4 & (~c0 | ((~s3 | ~b1) & (~s2 | ~b0))))) | ~_gpr -> _i12+
+        _i12 => i12-
+
+        //                            Keeper
+        _gsr & re & te & ie & l2 & s1 | i13 & _gpr & (te | l2) -> _i13-
+        ~te & ~l2                     | ~i13 & (~_gsr | ~re | ~te | ~ie | ~l2 | ~s1) | ~_gpr -> _i13+
+        _i13 => i13-
+
+        //                            Keeper
+        _gsr & re & te & ie & l3 & s1 | i14 & _gpr & (te | l3) -> _i14-
+        ~te & ~l3                     | ~i14 & (~_gsr | ~re | ~te | ~ie | ~l3 | ~s1) | ~_gpr -> _i14+
+        _i14 => i14-
+
+
+        ~i1 & ~i2 & ~i3 & ~i4 & ~i5 & ~i6 & ~i7 & ~i8 & ~i11 & ~i12 & ~i13 & ~i14 -> le+
+		i1 | i2 | i3 | i4 | i5 | i6 | i7 | i8 | i11 | i12 | i13 | i14 -> le-
+
+        ~c1 | ~_i1 | ~re & (~_i2 | ~_i3)   -> c0+
+        c1 & _i1 & (re | _i2 & _i3)        -> c0-
+
+		~gpr & ~c0 | ~_i5 | ~re & (~_i6 | ~_i8) -> c1+
+		gpr | c0 & _i5 & (re | (_i6 & _i8)) -> c1- // Choice to set c0 at reset is arbitrary
+
+
+        ~b1 | ~re & (~_i2 | ~_i6 | ~_i9 | ~_i11 | ~_i12)   -> b0+
+        b1 & (re | _i2 & _i6 & _i9 & _i11 & _i12)        -> b0-
+
+		~gpr & ~b0 | ~re & (~_i4 | ~_i8) -> b1+
+		gpr | b0 & (re | (_i4 & _i8)) -> b1-
+
+
+        (~s2 & ~s3 & ~s4) | ~re & (~_i11 | ~_i12 )   -> s1+
+        (s2 | s3 | s4) & (re | _i11 & _i12)        -> s1-
+
+        ~gpr & ~s1 & ~s3 & ~s4 | ~ie & (~_i1 | ~_i5) -> s2+
+		gpr | (s1 | s3 | s4) & (ie | (_i1 & _i5)) -> s2-
+
+        ~gpr & ~s1 & ~s2 & ~s4 | ~re & (~_i2 | ~_i4 | ~_i6 | ~_i8) -> s3+
+		gpr | (s1 | s2 | s4) & (re | (_i2 & _i4 & _i6 & _i8)) -> s3-
+
+        ~gpr & ~s1 & ~s2 & ~s3 | ~re & (~_i9 | ~_i10) -> s4+
+		gpr | (s1 | s2 | s3) & (re | (_i9 & _i10)) -> s4-
+
+	}
+
+}

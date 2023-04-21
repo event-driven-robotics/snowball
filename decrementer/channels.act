@@ -1,0 +1,19 @@
+defchan e1of2 <: chan(bool) (bool d[2],d0,d1,e)
+{
+    d0 = d[0];
+    d1 = d[1];
+    spec {
+        exclhi(d0,d1)
+    }
+}
+
+defchan e1of4 <: chan(bool) (bool d[4],d0,d1,d2,d3,e)
+{
+    d0 = d[0];
+    d1 = d[1];
+    d2 = d[2];
+    d3 = d[3];
+    spec {
+        exclhi(d0,d1,d2,d3)
+    }
+}

@@ -1,0 +1,77 @@
+import "basicGates.act";
+import "channels.act";
+
+export defproc inc(e1of4 L; e1of4 R; globals g)
+{
+    // Renaming of external variables
+    bool le, l0, l1, l2, l3;
+    L.e = le;
+    L.d[0] = l0;
+    L.d[1] = l1;
+    L.d[2] = l2;
+    L.d[3] = l3;
+
+    bool re, r0, r1, r2, r3;
+    R.e = re;
+    R.d[0] = r0;
+    R.d[1] = r1;
+    R.d[2] = r2;
+    R.d[3] = r3;
+
+    bool c0, c1;
+    bool _r1, _r2, _r3;
+    bool _i0, _i1, _i2, _i3, _i4, _i5;
+    bool  i0,  i1,  i2,  i3,  i4,  i5;
+
+    bool _c0;
+
+    bool gsr, _gsr, gpr, _gpr;
+     gsr = g.sReset;
+    _gsr = g._sReset;
+     gpr = g.pReset;
+    _gpr = g._pReset;
+
+    orx3 orR0(i0, i2, i3, r0);
+    i1 = r1;
+    i4 = r2;
+    i5 = r3;
+
+	prs <g.Vdd, g.GND>
+	{
+    //                                  Keeper
+        _gsr & re & l0 & c0             | i0 & _gpr & (re | l0)                             -> _i0-
+        ~re & ~l0                       | ~i0 & (~_gsr | ~re | ~l0 | ~c0)                   | ~_gpr -> _i0+
+        _i0 => i0-
+
+        _gsr & re & (l0 & c1 | l1 & c0) | i1 & _gpr & (re | l0 | l1 | c1)                   -> _i1-
+        ~re & ~l0 & ~l1 & ~c1           | ~i1 & (~_gsr | ~re | ((~l0 | ~c1) & (~l1 | ~c0))) | ~_gpr -> _i1+
+        _i1 => i1-
+
+        _gsr & re & l1 & c1             | i2 & _gpr & (re | l1)                             -> _i2-
+        ~re & ~l1                       | ~i2 & (~_gsr | ~re | ~l1 | ~c1)                   | ~_gpr -> _i2+
+        _i2 => i2-
+
+        _gsr & re & (l2 | l3) & c1      | i3 & _gpr & (re | c1)                             -> _i3-
+        ~re            & ~c1            | ~i3 & (~_gsr | ~re | (~l2 & ~l3) | ~c1)           | ~_gpr -> _i3+
+        _i3 => i3-
+
+        re & l2   & c0           | i4 & _gpr & (re | l2 | c0)                        -> _i4-
+        ~re & ~l2 & ~c0          | ~i4 & (~re | ~l2 | ~c0)                   | ~_gpr -> _i4+
+        _i4 => i4-
+
+        re & l3   & c0           |  i5 & _gpr & ( re |  l3 |  c0)                    -> _i5-
+        ~re & ~l3 & ~c0          | ~i5 & (~re | ~l3 | ~c0)                   | ~_gpr -> _i5+
+        _i5 => i5-
+
+        ~i0 & ~i1 & ~i2 & ~i4 & ~i5 -> le+
+		i0 | i1 | i2 | i4 | i5 -> le-
+
+        ~gpr & ~c1 | ~re & (~_i1 | ~_i3)   -> c0+
+        gpr | c1 & (re | _i1 & _i3)        -> c0-
+
+		~c0 | ~re & (~_i4 | ~_i5) -> c1+
+		c0 & (re | (_i4 & _i5)) -> c1-
+
+	}
+
+}

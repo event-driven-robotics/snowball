@@ -1,0 +1,62 @@
+random
+break-on-warn
+initialize
+
+channel e1ofN 4 L
+channel e1ofN 2 D
+channel e1ofN 4 R
+
+injectfile D input_D0.dec
+injectfile L input_L.dec
+dumpfile R output_R.dec
+
+watchall
+
+mode reset
+
+echo Reset
+
+set g.Vdd 1
+set g.GND 0
+set Reset 1
+set g.pReset 1
+set g.sReset 1
+
+cycle
+
+echo Any status U here:
+status U
+
+set g.pReset 0
+
+echo lowering parallel Reset
+
+mode run
+cycle
+
+echo lowering serial reset
+
+
+set Reset 0
+set g.sReset 0
+
+echo status 1
+status 1
+
+echo status 0
+status 0
+
+
+cycle
+
+echo status U
+status U
+
+echo status X
+status X
+
+echo status 1
+status 1
+
+echo status 0
+status 0
