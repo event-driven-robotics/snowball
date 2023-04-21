@@ -6,7 +6,7 @@ channel e1ofN 4 L
 channel e1ofN 2 D
 channel e1ofN 4 R
 
-injectfile D input_D0.dec
+injectfile D input_D.dec
 injectfile L input_L.dec
 dumpfile R output_R.dec
 

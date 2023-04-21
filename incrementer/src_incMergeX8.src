@@ -13,15 +13,15 @@ channel e1ofN 2 D7
 channel e1ofN 2 D8
 channel e1ofN 4 R
 
-injectfile D1 input_D0.dec
-injectfile D2 input_D0.dec
-injectfile D3 input_D0.dec
-injectfile D4 input_D0.dec
-injectfile D5 input_D0.dec
-injectfile D6 input_D0.dec
-injectfile D7 input_D0.dec
-injectfile D8 input_D0.dec
-injectfile L input_L.dec
+injectfile D1 input_D.dec
+injectfile D2 input_D.dec
+injectfile D3 input_D.dec
+injectfile D4 input_D.dec
+injectfile D5 input_D.dec
+injectfile D6 input_D.dec
+injectfile D7 input_D.dec
+injectfile D8 input_D.dec
+injectfile L input_blank.dec
 dumpfile R output_R.dec
 
 watchall
