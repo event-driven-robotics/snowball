@@ -42,7 +42,7 @@ To test the code in the "decrementer" folder, the corresponding instructions are
 
 This will produce two output files; one for thedownstream commounications blocks, called `output_R.dec`, and one for the local event receiver, called `output_T.dec`. 
 
-A snowball gains size and momentum as it rolls down a hill; the name is a metaphor for the incrementer chain.
+A snowball gains size and momentum as it rolls down a hill; the name is a metaphor for the events moving through the incrementer chain.
 
 
 
