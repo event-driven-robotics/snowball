@@ -1,7 +1,7 @@
 import "basicGates.act";
 import "channels.act";
 
-export defproc serialDec(e1of4 L; e1of4 R; e1of2 T; globals g)
+export defproc dec(e1of4 L; e1of4 R; e1of2 T; globals g)
 {
     // Renaming of external variables
     bool le, l0, l1, l2, l3;

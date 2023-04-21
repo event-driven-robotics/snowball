@@ -1,12 +1,12 @@
-import "serialDec.act";
+import "dec.act";
 
 e1of2 T;
 e1of4 L, R;
 globals g;
 
-serialDec serialDec(L, R, T, g);
+dec dec(L, R, T, g);
 
-bool Reset, resetDoesSomething;
+bool Reset, resetTrigger;
 
 nor vT(T.d, T.e);
 
@@ -15,5 +15,5 @@ nor4 vR(R.d, R.e);
 prs <g.Vdd, g.GND> {
     g.pReset => g._pReset-
     g.sReset => g._sReset-
-    Reset => resetDoesSomething-
+    Reset => resetTrigger-
 }
