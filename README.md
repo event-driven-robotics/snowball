@@ -34,6 +34,7 @@ To test the code in the "decrementer" folder, the corresponding instructions are
 
 `prs2net -p 'serialDec<>' test_serialDec.act`
 
+A snowball gains size and momentum as it rolls down a hill, and the name is a metaphor to the incrementer chain.
 
 
 
