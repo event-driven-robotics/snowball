@@ -40,7 +40,7 @@ To test the code in the "decrementer" folder, the corresponding instructions are
 
 `prs2net -p 'dec<>' test_dec.act`
 
-This will produce two output files; one for thedownstream communications blocks, called `output_R.dec`, and one for the local event receiver, called `output_T.dec`. 
+This will produce two output files; one for the downstream communications blocks, called `output_R.dec`, and one for the local event receiver, called `output_T.dec`. 
 
 A snowball gains size and momentum as it rolls down a hill; the name is a metaphor for the events moving through the incrementer chain.
 
