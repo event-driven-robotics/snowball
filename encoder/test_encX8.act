@@ -1,17 +1,17 @@
-import "incMerge.act";
+import "enc.act";
 
 e1of2 D1, D2, D3, D4, D5, D6, D7, D8;
 e1of4 L, I1, I2, I3, I4, I5, I6, I7, R;
 globals g;
 
-incMerge im1(L, D1, I1, g);
-incMerge im2(I1, D2, I2, g);
-incMerge im3(I2, D3, I3, g);
-incMerge im4(I3, D4, I4, g);
-incMerge im5(I4, D5, I5, g);
-incMerge im6(I5, D6, I6, g);
-incMerge im7(I6, D7, I7, g);
-incMerge im8(I7, D8, R, g);
+enc enc1(L, D1, I1, g);
+enc enc2(I1, D2, I2, g);
+enc enc3(I2, D3, I3, g);
+enc enc4(I3, D4, I4, g);
+enc enc5(I4, D5, I5, g);
+enc enc6(I5, D6, I6, g);
+enc enc7(I6, D7, I7, g);
+enc enc8(I7, D8, R, g);
 
 bool Reset, resetDoesSomething;
 

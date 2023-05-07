@@ -17,15 +17,14 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 
+pathToRepo = "C:\\repos\\tactile_repos\\snowball" # Change this
+
 def convertFile(file):
     addresses = []
     addressStrings = []
     bits = []
-    dd = 0
     with open(file, 'r') as fileOpened:
         for line in fileOpened:
-            dd += 1
-            print(dd)
             try:
                 token = int(line[0])
                 if token < 2:
@@ -36,8 +35,6 @@ def convertFile(file):
                     address = 0
                     for bit in bits:
                         address = (address << 1) | bit
-                    if address == 22:
-                        x = 1
                     bits = []
                     polarityString = 'f' if token == 2 else 'e'
                     addresses.append(address + (token - 2) * 0.5)
@@ -45,31 +42,21 @@ def convertFile(file):
             except ValueError: # Handle blank lines
                 continue
     return addresses, addressStrings
-
-pathToRepo = "C:\\repos\\tactile_repos\\snowball" 
-filesToConvert = [
-    os.path.join(pathToRepo, 'incrementer\\input_L.dec'),
-    os.path.join(pathToRepo, 'decrementer\\input_L.dec'),
-    os.path.join(pathToRepo, 'outputs\\output_inc.dec'),
-    os.path.join(pathToRepo, 'outputs\\output_incX8.dec'),
-    os.path.join(pathToRepo, 'outputs\\output_decR.dec'),
-    ]
-
-for file in filesToConvert:
-    addresses, addressStrings = convertFile(file)
-    # Perform conversion
-    # Print the result
-    print(file)
-    print(' '.join(addressStrings))
-    print()
     
 #%% Generate histogram for single encoder experiment
 
-addressEventsInFile = os.path.join(pathToRepo, 'incrementer\\input_L.dec')
+addressEventsInFile = os.path.join(pathToRepo, 'encoder\\input_L.dec')
 addressesIn, addressStringsIn = convertFile(addressEventsInFile)
+print("Address-events in:")
+print(' '.join(addressStringsIn))
+print()
+
 sensorIn = [0, 0.5] * 32 #  Shortcut to reading in the file 'input_D.dec'
 addressEventsOutFile = os.path.join(pathToRepo, 'outputs\\output_inc.dec')
 addressesOut, addressStringsOut = convertFile(addressEventsOutFile)
+print("Address-events out:")
+print(' '.join(addressStringsOut))
+print()
 
 allAddresses = addressesIn + sensorIn + addressesOut
 
@@ -99,6 +86,9 @@ plt.plot([0.75, 0.75], [0, maxY], '--k')
 sensorIn = [0, 0.5] * 32 #  Shortcut to reading in the file 'input_D.dec'
 addressEventsOutFile = os.path.join(pathToRepo, 'outputs\\output_incX8.dec')
 addressesOut, addressStringsOut = convertFile(addressEventsOutFile)
+print("Address-events out:")
+print(' '.join(addressStringsOut))
+print()
 
 allAddresses = sensorIn + addressesOut
 
@@ -110,8 +100,8 @@ addressRange = np.linspace(min(allAddresses), max(allAddresses), numBins)
 
 plt.close('all')
 fig, ax = plt.subplots()
-ax.bar(addressRange+0.05, height=countsOut, width=0.25, color='r')
-ax.bar(addressRange-0.05, height=countsIn, width=0.25, color='b')
+ax.bar(addressRange, height=countsOut, width=0.35, color='r')
+ax.bar(addressRange, height=countsIn, width=0.35, color='b')
 maxY = max(max(countsIn), max(countsOut)) + 1
 plt.yticks(list(range(0, maxY, 4)))
 addressStringsSequence = [(str(int(x)) if x > 0.5 else '')
@@ -121,5 +111,75 @@ plt.xticks(addressRange, addressStringsSequence)
 ax.tick_params(axis='y', which='major', labelsize=14)
 ax.tick_params(axis='x', which='major', labelsize=14, rotation=60)
 plt.plot([0.75, 0.75], [0, maxY], '--k')
+plt.xlabel('Sensor address', fontsize=14)
+plt.ylabel('Count of address-events out', fontsize=14)
         
+#%% Generate histogram for halfway through encoder array experiment
+
+addressSelected = []
+countOfSensor1Events = 0
+for address in addressesOut:
+    addressSelected.append(int(address))
+    if address < 2:
+        countOfSensor1Events += 1
+    if countOfSensor1Events == 64:
+        break
+
+numBins = int((max(addressSelected) - min(addressSelected)) * 2) + 1
+binRange = (min(addressSelected) - 0.25, max(addressSelected) + 0.25)
+countsOut, _ = np.histogram(addressSelected, bins=numBins, range=binRange)
+addressRange = np.linspace(min(addressSelected), max(addressSelected), numBins)
+
+plt.close('all')
+fig, ax = plt.subplots()
+ax.bar(addressRange, height=countsOut, width=0.8, color='r')
+maxY = max(countsOut) + 1
+plt.yticks(list(range(0, maxY, 4)))
+ax.tick_params(axis='y', which='major', labelsize=14)
+ax.tick_params(axis='x', which='major', labelsize=14, rotation=60)
+plt.xlabel('Sensor address', fontsize=14)
+plt.ylabel('Count of address-events out', fontsize=14)
+    
+#%% Generate histogram for decoder experiment
+
+addressEventsInFile = os.path.join(pathToRepo, 'decoder\\input_L.dec')
+addressesIn, addressStringsIn = convertFile(addressEventsInFile)
+print("Address-events in:")
+print(' '.join(addressStringsIn))
+print()
+
+addressEventsOutFile = os.path.join(pathToRepo, 'outputs\\output_decR.dec')
+addressesOut, addressStringsOut = convertFile(addressEventsOutFile)
+print("Address-events out:")
+print(' '.join(addressStringsOut))
+print()
+
+localEventsOutFile = os.path.join(pathToRepo, 'outputs\\output_decT.dec')
+localOut = [0, 0.5]  #  Shortcut to reading in the file 'output_decT.dec'
+print("Local events out:")
+print('f e') # Shortcut to reading that file
+print()
+
+allAddresses = addressesIn + localOut + addressesOut
+
+numBins = int((max(allAddresses) - min(allAddresses)) * 2) + 1
+binRange = (min(allAddresses) - 0.25, max(allAddresses) + 0.25)
+countsIn, _ = np.histogram(addressesIn, bins=numBins, range=binRange)
+countsOut, _ = np.histogram(addressesOut + localOut, bins=numBins, range=binRange)
+addressRange = np.linspace(min(allAddresses), max(allAddresses), numBins)
+
+plt.close('all')
+fig, ax = plt.subplots()
+ax.bar(addressRange+0.05, height=countsOut, width=0.25, color='r')
+ax.bar(addressRange-0.05, height=countsIn, width=0.25, color='b')
+maxY = max(max(countsIn), max(countsOut)) + 1
+plt.yticks(list(range(0, maxY)))
+addressStringsSequence = [(str(int(x)) if x > 0.5 else '')
+                          + ('e' if np.mod(x, 1) == 0.5 else 'f') 
+                          for x in addressRange]
+plt.xticks(addressRange, addressStringsSequence)
+ax.tick_params(axis='y', which='major', labelsize=14)
+ax.tick_params(axis='x', which='major', labelsize=14, rotation=60)
+plt.plot([0.75, 0.75], [0, maxY], '--k')
         
+    

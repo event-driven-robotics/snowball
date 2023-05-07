@@ -6,9 +6,9 @@ channel e1ofN 4 L
 channel e1ofN 4 R
 channel e1ofN 2 T
 
-injectfile L input_L.dec
-dumpfile R output_R.dec
-dumpfile T output_T.dec
+injectfile L input_addr.dec
+dumpfile R output_addr.dec
+dumpfile T output_local.dec
 
 watchall
 

@@ -1,10 +1,10 @@
-import "incMerge.act";
+import "enc.act";
 
 e1of2 D;
 e1of4 L, R;
 globals g;
 
-incMerge s(L, D, R, g);
+enc s(L, D, R, g);
 
 bool Reset, resetTrigger;
 

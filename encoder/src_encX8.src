@@ -3,12 +3,26 @@ break-on-warn
 initialize
 
 channel e1ofN 4 L
-channel e1ofN 2 D
+channel e1ofN 2 D1
+channel e1ofN 2 D2
+channel e1ofN 2 D3
+channel e1ofN 2 D4
+channel e1ofN 2 D5
+channel e1ofN 2 D6
+channel e1ofN 2 D7
+channel e1ofN 2 D8
 channel e1ofN 4 R
 
-injectfile D input_D.dec
-injectfile L input_L.dec
-dumpfile R output_R.dec
+injectfile D1 input_local.dec
+injectfile D2 input_local.dec
+injectfile D3 input_local.dec
+injectfile D4 input_local.dec
+injectfile D5 input_local.dec
+injectfile D6 input_local.dec
+injectfile D7 input_local.dec
+injectfile D8 input_local.dec
+injectfile L input_blank.dec
+dumpfile R output_addr.dec
 
 watchall
 
