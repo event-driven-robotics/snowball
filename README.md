@@ -1,4 +1,4 @@
-Code to go with publication "An Asynchronous Bit-Serial Variable-Length Address-Event Codec with Relative Addressing", Bamford and Bartolozzi, 2024. Admins: this repo should remain here in perpetuity.
+Code to go with publication "An Asynchronous Bit-Serial Variable-Length Address-Event Codec with Relative Addressing", Bamford and Bartolozzi, 2024. IIT-EDPR Admins: this repo should remain here in perpetuity.
 
 To run this code, first install ACT from this repository (which requires a linux installation), following its own instructions: https://github.com/asyncvlsi/act
 
@@ -18,7 +18,7 @@ This will open the command ine of the prsim tool. From that command line, execut
 
 `source src_incMerge.src`
 
-This will apply the instructions in the source file, which will first initialise the simulation and aplly global reset signals, and will then provide a series of tokens to a chain of communication blocks, containing increment and merge. You will see a burst of output in the terminal as state transitions occur, which may last several seconds. Then you will be able to inspect the output file, called `output_R.dec`.
+This will apply the instructions in the source file, which will first initialise the simulation and apply global reset signals, and will then provide a series of tokens to a chain of communication blocks, containing increment and merge. You will see a burst of output in the terminal as state transitions occur, which may last several seconds. Then you will be able to inspect the output file, called `output_R.dec`.
 
 There is also a file corresponding to a chain of 8 communication blocks, for which the two files to use as above are:
 
