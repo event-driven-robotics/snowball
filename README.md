@@ -1,4 +1,4 @@
-Code to go with publication "An Asynchronous Bit-Serial Variable-Length Address-Event Codec with Relative Addressing", Bamford and Bartolozzi, 2023. Admins: this repo should remain here in perpetuity.
+Code to go with publication "An Asynchronous Bit-Serial Variable-Length Address-Event Codec with Relative Addressing", Bamford and Bartolozzi, 2024. Admins: this repo should remain here in perpetuity.
 
 To run this code, first install ACT from this repository (which requires a linux installation), following its own instructions: https://github.com/asyncvlsi/act
 
