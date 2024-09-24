@@ -36,7 +36,7 @@ def convertFile(file):
                     for bit in bits:
                         address = (address << 1) | bit
                     bits = []
-                    polarityString = 'f' if token == 2 else 'e'
+                    polarityString = 'a' if token == 2 else 'b'
                     addresses.append(address + (token - 2) * 0.5)
                     addressStrings.append(str(address) + polarityString)
             except ValueError: # Handle blank lines
@@ -52,7 +52,7 @@ print(' '.join(addressStringsIn))
 print()
 
 sensorIn = [0, 0.5] * 32 #  Shortcut to reading in the file 'input_D.dec'
-addressEventsOutFile = os.path.join(pathToRepo, 'outputs\\output_enc_addr.dec')
+addressEventsOutFile = os.path.join(pathToRepo, 'outputs\\output_enc_addr_attempt_3.dec')
 addressesOut, addressStringsOut = convertFile(addressEventsOutFile)
 print("Address-events out:")
 print(' '.join(addressStringsOut))
