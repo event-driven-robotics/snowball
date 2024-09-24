@@ -1,4 +1,5 @@
 random
+random_seed 42
 break-on-warn
 initialize
 
