@@ -4,33 +4,33 @@ To run this code, first install ACT from this repository (which requires a linux
 
 Then, to recreate the simulation results in the paper for the incrementer/encoder:
 
-In the folder "incrementer", excute:
+In the folder "encoder", excute:
 
-`aflat test_incMerge.act > test_incMerge.prs`
+`aflat test_enc.act > test_enc.prs`
 
 This will convert the act code to a production rule set.
 
 Then execute:
 
-`prsim test_incMerge.prs`
+`prsim test_enc.prs`
 
 This will open the command ine of the prsim tool. From that command line, execute:
 
-`source src_incMerge.src`
+`source src_enc.src`
 
-This will apply the instructions in the source file, which will first initialise the simulation and apply global reset signals, and will then provide a series of tokens to a chain of communication blocks, containing increment and merge. You will see a burst of output in the terminal as state transitions occur, which may last several seconds. Then you will be able to inspect the output file, called `output_R.dec`.
+This will apply the instructions in the source file, which will first initialise the simulation and apply global reset signals, and will then provide a series of tokens to a chain of communication blocks, containing increment and merge. You will see a burst of output in the terminal as state transitions occur, which may last several seconds. Then you will be able to inspect the output file, called `output_addr.dec`.
 
 There is also a file corresponding to a chain of 8 communication blocks, for which the two files to use as above are:
 
-`prsim test_incMergeX8.prs`
+`prsim test_encX8.prs`
 
-`source src_incMergeX8.src`
+`source src_encX8.src`
 
 Back on the linux command line, to generate a netlist, which you could use for onward simulations in spice, execute:
 
-`prs2net -p 'incMerge<>' test_incMerge.act`
+`prs2net -p 'enc<>' test_enc.act`
 
-To test the code in the "decrementer" folder, the corresponding instructions are:
+To test the code in the "decoder" folder, the corresponding instructions are:
 
 `aflat test_dec.act > test_dec.prs` 
 
@@ -40,7 +40,7 @@ To test the code in the "decrementer" folder, the corresponding instructions are
 
 `prs2net -p 'dec<>' test_dec.act`
 
-This will produce two output files; one for the downstream communications blocks, called `output_R.dec`, and one for the local event receiver, called `output_T.dec`. 
+This will produce two output files; one for the downstream communications blocks, called `output_addr.dec`, and one for the local event receiver, called `output_local.dec`. 
 
 A snowball gains size and momentum as it rolls down a hill; the name is a metaphor for the events moving through the incrementer chain.
 
