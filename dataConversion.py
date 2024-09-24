@@ -73,7 +73,7 @@ ax.bar(addressRange-0.05, height=countsIn, width=0.25, color='b')
 maxY = max(max(countsIn), max(countsOut)) + 1
 plt.yticks(list(range(0, maxY, 4)))
 addressStringsSequence = [(str(int(x)) if x > 0.5 else '')
-                          + ('e' if np.mod(x, 1) == 0.5 else 'f') 
+                          + ('b' if np.mod(x, 1) == 0.5 else 'a') 
                           for x in addressRange]
 plt.xticks(addressRange, addressStringsSequence)
 ax.tick_params(axis='y', which='major', labelsize=14)
@@ -106,7 +106,7 @@ ax.bar(addressRange, height=countsIn, width=0.35, color='b')
 maxY = max(max(countsIn), max(countsOut)) + 1
 plt.yticks(list(range(0, maxY, 4)))
 addressStringsSequence = [(str(int(x)) if x > 0.5 else '')
-                          + ('e' if np.mod(x, 1) == 0.5 else 'f') 
+                          + ('b' if np.mod(x, 1) == 0.5 else 'a') 
                           for x in addressRange]
 plt.xticks(addressRange, addressStringsSequence)
 ax.tick_params(axis='y', which='major', labelsize=14)
@@ -178,7 +178,7 @@ ax.bar(addressRange-0.05, height=countsIn, width=0.25, color='b')
 maxY = max(max(countsIn), max(countsOut)) + 0.25
 plt.yticks([0, 1])
 addressStringsSequence = [(str(int(x)) if x > 0.5 else '')
-                          + ('e' if np.mod(x, 1) == 0.5 else 'f') 
+                          + ('b' if np.mod(x, 1) == 0.5 else 'a') 
                           for x in addressRange]
 plt.xticks(addressRange, addressStringsSequence)
 ax.tick_params(axis='y', which='major', labelsize=14)
