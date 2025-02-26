@@ -14,7 +14,7 @@ Then execute:
 
 `prsim test_enc.prs`
 
-This will open the command ine of the prsim tool. From that command line, execute:
+This will open the command line of the prsim tool. From that command line, execute:
 
 `source src_enc.src`
 
