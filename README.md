@@ -42,6 +42,8 @@ To test the code in the "decoder" folder, the corresponding instructions are:
 
 This will produce two output files; one for the downstream communications blocks, called `output_addr.dec`, and one for the local event receiver, called `output_local.dec`. 
 
+The folder "keeperised" contains an alternative version of the inc and merge cells where the gates are not fully complementary but rather have keepers, and in which serial and parallel resets (gsr and gpr) have been replaced with a single reset signal (rst). These, along with other very minor modifications move the design from that used for the act/prsim simulations (as above) to the ams/spectre simulations used in the comparison to P-AER.
+
 A snowball gains size and momentum as it rolls down a hill; the name is a metaphor for the events moving through the incrementer chain.
 
 

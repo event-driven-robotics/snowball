@@ -1,0 +1,73 @@
+import globals;
+import "basicGates.act";
+import "channels.act";
+
+export defproc inc(e1of4 L; e1of4 R)
+{
+    // Renaming of external variables
+    bool le, l0, l1, l2, l3;
+    L.e = le;
+    L.d[0] = l0;
+    L.d[1] = l1;
+    L.d[2] = l2;
+    L.d[3] = l3;
+
+    bool re, r0, r1, r2, r3;
+    R.e = re;
+    R.d[0] = r0;
+    R.d[1] = r1;
+    R.d[2] = r2;
+    R.d[3] = r3;
+
+    bool c0, c1;
+    bool _r1, _r2, _r3;
+    bool _i0, _i1, _i2, _i3, _i4, _i5;
+    bool  i0,  i1,  i2,  i3,  i4,  i5;
+
+    bool _c0;
+
+    bool rst, _rst;
+    rst = Reset;
+
+    nandx3 nandR0(_i0, _i2, _i3, r0);
+    i1 = r1;
+    i4 = r2;
+    i5 = r3;
+
+	prs {
+		rst => _rst-
+	
+        ~l0 &      ~re | ~_rst 				-> _i0+
+         l0 & c0 &  re &  _rst             	-> _i0-
+        _i0 => i0-
+
+        ~l0 & ~c1 & ~l1       & ~re | ~_rst -> _i1+
+        (l0 &  c1 |  l1 & c0) &  re &  _rst -> _i1-
+        _i1 => i1-
+
+        ~l1 &      ~re | ~_rst 				-> _i2+
+         l1 & c1 &  re &  _rst				-> _i2-
+        _i2 => i2-
+
+                    ~c1 & ~re | ~_rst 		-> _i3+
+        (l2 | l3) &  c1 &  re &  _rst		-> _i3-
+        //_i3 => i3-  								i3 is generated as part of the keeper, but I'm not explicitly creating it here, because otherwise it's dangling and may cause instability
+
+        ~l2 & ~c0 & ~re | ~_rst 			-> _i4+
+         l2 &  c0 &  re &  _rst           	-> _i4-
+        _i4 => i4-
+
+        ~l3 & ~c0 & ~re | ~_rst 			-> _i5+
+        l3 &  c0 &  re &  _rst				-> _i5-
+        _i5 => i5-
+
+        ~i0 & ~i1 & ~i2 & ~i4 & ~i5			-> le+
+		 i0 |  i1 |  i2 |  i4 |  i5			-> le-
+
+        (~c1 | (~_i1 | ~_i3) & ~re) & ~rst	-> c0+
+          c1 & ( _i1 &  _i3  |  re) |  rst	-> c0-
+
+		~c0 | (~_i4 | ~_i5) & ~re 			-> c1+
+		 c0 & ((_i4 &  _i5) |  re) 			-> c1-
+	}
+}

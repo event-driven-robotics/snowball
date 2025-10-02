@@ -52,7 +52,7 @@ print(' '.join(addressStringsIn))
 print()
 
 sensorIn = [0, 0.5] * 32 #  Shortcut to reading in the file 'input_D.dec'
-addressEventsOutFile = os.path.join(pathToRepo, 'outputs\\output_enc_addr_attempt_3.dec')
+addressEventsOutFile = os.path.join(pathToRepo, 'outputs\\output_enc_addr_attempt_2.dec')
 addressesOut, addressStringsOut = convertFile(addressEventsOutFile)
 print("Address-events out:")
 print(' '.join(addressStringsOut))
@@ -82,6 +82,8 @@ plt.plot([0.75, 0.75], [0, maxY], '--k')
 plt.xlabel('Sensor address', fontsize=14)
 plt.ylabel('Count of address-events', fontsize=14)  
         
+fig.tight_layout()
+
 #%% Generate histogram for encoder array experiment
 
 sensorIn = [0, 0.5] * 32 #  Shortcut to reading in the file 'input_D.dec'
@@ -183,7 +185,8 @@ addressStringsSequence = [(str(int(x)) if x > 0.5 else '')
 plt.xticks(addressRange, addressStringsSequence)
 ax.tick_params(axis='y', which='major', labelsize=14)
 ax.tick_params(axis='x', which='major', labelsize=14, rotation=60)
-plt.plot([0.75, 0.75], [0, 1.25], '--k')
+plt.plot([0.75, 0.75], [0, 1.05], '--k')
 plt.xlabel('Sensor address', fontsize=14)
 plt.ylabel('Count of address-events', fontsize=14) 
     
+fig.tight_layout()
