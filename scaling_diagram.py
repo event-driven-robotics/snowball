@@ -18,11 +18,11 @@ pairs = [
 inputs = np.array(pairs) * 2
 
 transistors_snbl = [
-    2140,
-    6850,
-    21400,
-    67600,
-    214000,
+    1840,
+    5890,
+    18400,
+    58100,
+    184000,
 ]
 
 transistors_paer_matched = [
