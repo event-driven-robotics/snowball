@@ -1,6 +1,5 @@
-random
-random_seed 42
 break-on-warn
+random
 initialize
 
 channel e1ofN 4 L
