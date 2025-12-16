@@ -11,7 +11,6 @@ bold=$(tput bold)
 normal=$(tput sgr0)
 und=$(tput smul)
 
-faildirs=""
 failed=0
 iteration=0
 numberofruns=100
@@ -63,7 +62,7 @@ if [ ! -z $1 ]; then
   numberofruns=$1
 fi
 
- while [ $iteration -lt $numberofruns ]; do
+while [ $iteration -lt $numberofruns ]; do
     # Loop through each file
     for i in "${!files[@]}"; do
         file="${files[i]}"
@@ -78,10 +77,10 @@ fi
 done
 iteration=0  # Reset iteration for next file
 
+echo $failed
 if [ $failed -eq 1 ]; then
-    echo ""
     echo "${bold}*********************************"
-    echo "* FAILED DIRECTORIES:${normal}$faildirs ${bold}*"
+    echo "* FAILED TESTS:${normal}$faildirs ${bold}*"
     echo "*********************************${normal}"
 fi
 
