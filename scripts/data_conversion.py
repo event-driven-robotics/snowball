@@ -17,7 +17,7 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 
-pathToRepo = "C:\\repos\\tactile_repos\\snowball" # Change this
+pathToRepo = "/path/to/repo" # Change this
 
 def convertFile(file):
     addresses = []
