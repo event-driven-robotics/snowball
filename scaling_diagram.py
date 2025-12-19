@@ -142,7 +142,7 @@ add_line(energy_snbl, '-ob', 'Energy (pJ/event) - This work')
 add_line(energy_paer_matched, '--ob', 'Energy (pJ/event) - P-AER, matched capacity')
 add_line(energy_paer_nominal, '--xb', 'Energy (pJ/event) - P-AER, slack=1')
 
-ax.set_title('Scaling trends')
+#ax.set_title('Scaling trends')
 ax.set_ylabel('')
 ax.legend(legend)
 ax.set_axisbelow(True)
@@ -150,7 +150,6 @@ ax.minorticks_on()
 ax.grid(True, which='major', color='0.6', linewidth=0.8)
 ax.grid(True, which='minor', color='0.85', linewidth=0.5)
 ax.set_xlabel('Inputs')
-
-
-
+ax.set_ylim(3, 10000000000)
+fig.savefig('scaling.svg', bbox_inches='tight', format='svg')
 
